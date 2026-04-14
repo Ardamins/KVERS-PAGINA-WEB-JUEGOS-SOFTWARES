@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>KVERS · Programas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #0b0d14;
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Inter', Roboto, sans-serif;
+            color: #eef2ff;
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        :root {
+            --verde-kvers: #43ba82;
+            --morado-kvers: #5e48b1;
+            --celeste-kvers: #64cbea;
+            --gris-card: #12151f;
+        }
+
+        /* Header fijo - ANCHO AJUSTADO AL CONTENIDO */
+        .header {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--verde-kvers);
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            max-width: 100%;
+            margin: 0 auto;
+            gap: 0.4rem;
+        }
+
+        /* Logo */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-bottom: 0.2rem;
+        }
+        .logo-img {
+            height: 40px;
+            width: auto;
+            max-width: 130px;
+            object-fit: contain;
+        }
+        .logo-placeholder {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--verde-kvers), var(--celeste-kvers));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Menú horizontal tipo carrusel táctil */
+        .nav-links-wrapper {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            white-space: nowrap;
+            width: auto;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            scrollbar-color: var(--verde-kvers) #1e1f2c;
+            touch-action: pan-x;
+        }
+        .nav-links-wrapper::-webkit-scrollbar {
+            height: 3px;
+        }
+        .nav-links-wrapper::-webkit-scrollbar-track {
+            background: #1e1f2c;
+            border-radius: 10px;
+        }
+        .nav-links-wrapper::-webkit-scrollbar-thumb {
+            background: var(--verde-kvers);
+            border-radius: 10px;
+        }
+        .nav-links {
+            display: inline-flex;
+            gap: 0.5rem;
+            padding: 0.3rem 0;
+        }
+        .nav-links a {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50px;
+            font-weight: 700;
+            color: #eef2ff;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(100,203,234,0.4);
+            white-space: nowrap;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+        }
+        .nav-links a:hover, .nav-links a:active {
+            background: var(--morado-kvers);
+            color: white;
+            border-color: var(--celeste-kvers);
+            transform: scale(0.97);
+        }
+
+        /* Layout principal: contenido + anuncio lateral */
+        .main-layout {
+            max-width: 1300px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Contenedor de programas */
+        .programs-container {
+            flex: 3;
+            min-width: 0;
+        }
+
+        .programs-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff, var(--celeste-kvers));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            border-left: 4px solid var(--verde-kvers);
+            padding-left: 1rem;
+        }
+
+        /* Lista de programas */
+        .programs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .program-item {
+            background: var(--gris-card);
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid rgba(67,186,130,0.2);
+            transition: all 0.2s;
+        }
+        .program-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--celeste-kvers);
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.3px;
+        }
+        .download-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .platform-btn {
+            background: #1e1f2c;
+            border: 1px solid var(--morado-kvers);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .platform-btn.selected {
+            background: var(--morado-kvers);
+            border-color: var(--celeste-kvers);
+            box-shadow: 0 0 6px var(--celeste-kvers);
+        }
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .download-btn {
+            background: var(--verde-kvers);
+            border: none;
+            color: #0a0c12;
+            padding: 0.45rem 1.2rem;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .download-btn:hover {
+            background: var(--celeste-kvers);
+            transform: scale(0.98);
+        }
+        .adlink-btn {
+            background: #2a2e42;
+            border: none;
+            color: var(--celeste-kvers);
+            padding: 0.45rem 1.2rem;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .adlink-btn:hover {
+            background: var(--morado-kvers);
+            color: white;
+        }
+
+        /* Anuncio lateral (solo visible en PC) */
+        .sidebar-ad {
+            flex: 1;
+            min-width: 240px;
+            position: sticky;
+            top: 90px;
+            align-self: flex-start;
+        }
+        .ad-card {
+            background: linear-gradient(145deg, #1a1c2b, #0f111c);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(100,203,234,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .ad-card p {
+            margin-bottom: 0.8rem;
+            color: var(--verde-kvers);
+            font-weight: bold;
+        }
+        .ad-card img {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 1rem;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+        .ad-card small {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        /* Redes sociales */
+        .socials {
+            background: #0e0f17;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 1rem 1rem 1.5rem;
+            border-radius: 1.5rem;
+        }
+        .socials h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--celeste-kvers);
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .social-icon {
+            background: #1e1f2c;
+            padding: 0.5rem 1.3rem;
+            border-radius: 60px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            border: 1px solid var(--celeste-kvers);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .social-icon:hover {
+            background: var(--morado-kvers);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.2rem;
+            border-top: 1px solid #2a2e42;
+            font-size: 0.75rem;
+            color: #8f99b5;
+        }
+        footer strong {
+            color: var(--verde-kvers);
+        }
+
+        /* Estado en línea dentro del footer */
+        .footer-online {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #0e1f1a;
+            padding: 0.3rem 1rem;
+            border-radius: 60px;
+            margin-top: 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            border-left: 2px solid var(--verde-kvers);
+        }
+        .led-small {
+            width: 8px;
+            height: 8px;
+            background-color: #43ba82;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #43ba82;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.8);}
+            100% { opacity: 1; transform: scale(1.2);}
+        }
+        .ip-fake {
+            font-family: monospace;
+            background: #00000066;
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+        }
+
+        /* En móvil el sidebar desaparece */
+        @media (max-width: 850px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .sidebar-ad {
+                display: none;
+            }
+            .programs-title {
+                font-size: 1.5rem;
+            }
+            .program-name {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-links a {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+            .nav-links {
+                gap: 0.45rem;
+            }
+            .logo-img {
+                height: 36px;
+            }
+            .download-options, .action-buttons {
+                gap: 0.5rem;
+            }
+            .platform-btn, .download-btn, .adlink-btn {
+                padding: 0.35rem 0.8rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="nav-container">
+        <div class="logo-area">
+            <img src="LogoKvers.png" alt="KVERS" class="logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'logo-placeholder\'>KVERS</div>';">
+        </div>
+        
+        <!-- Menú horizontal tipo carrusel: DESLIZA CON LOS DEDOS -->
+        <div class="nav-links-wrapper" id="navSwipeWrapper">
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">🏠 Inicio</a>
+                <a href="juegos.html">🎮 Juegos</a>
+                <a href="programas.html" style="background: var(--morado-kvers); border-color: var(--celeste-kvers);">💻 Programas</a>
+                <a href="#" data-page="celulares">📱 Celulares</a>
+                <a href="#" data-page="isos">💿 ISOs</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="main-layout">
+    <!-- SECCIÓN DE PROGRAMAS -->
+    <div class="programs-container">
+        <h2 class="programs-title">📌 Catálogo de Programas</h2>
+        <div class="programs-list" id="programsList">
+            <!-- Los programas se generan dinámicamente con JS -->
+        </div>
+    </div>
+
+    <!-- ANUNCIO LATERAL (SOLO VISIBLE EN PC) -->
+    <aside class="sidebar-ad">
+        <div class="ad-card">
+            <p>✨ Patrocinador ✨</p>
+            <img src="anuncioGemini.png" alt="Anuncio">
+            <small>Software original · Ofertas</small>
+        </div>
+    </aside>
+</div>
+
+<!-- REDES SOCIALES -->
+<div class="socials">
+    <h3>🌐 Síguenos en Redes</h3>
+    <div class="social-icons">
+        <a href="#" class="social-icon" id="tiktokBtn">🎵 TikTok</a>
+        <a href="#" class="social-icon" id="instagramBtn">📸 Instagram</a>
+        <a href="#" class="social-icon" id="facebookBtn">📘 Facebook</a>
+    </div>
+    <p style="margin-top: 8px; font-size: 0.8rem;">keanovpaginawebyproyectos@gmail.com · Novedades diarias</p>
+</div>
+
+<footer>
+    <p>© 2025 KVERS · Todos los derechos reservados · Autor: <strong>KVERS</strong></p>
+    <p>🌐 Descargas directas · Software actualizado</p>
+    <!-- Estado en línea al final del footer -->
+    <div class="footer-online">
+        <div class="led-small"></div>
+        <span>En línea</span>
+        <div class="ip-fake">192.168.1.1</div>
+    </div>
+</footer>
+
+<script>
+    (function() {
+        // --------------------------------------------------------------
+        // LISTA DE PROGRAMAS: Edita aquí cada programa con tus enlaces
+        // --------------------------------------------------------------
+        const programsData = [
+            {
+                name: "COREL DRAW 21 Y BLOQUEO",
+                links: {
+                    drive: "https://drive.google.com/file/d/1vklF3Wk3eDlWUvutECV4oxvqLW5H68Yx/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa1",
+                    mega: "https://mega.nz/folder/programa1"
+                },
+                adLink: "https://www.ejemplopromocion.com/photoshop-oferta"
+            },
+            {
+                name: "Microsoft Office 2019",
+                links: {
+                    drive: "https://drive.google.com/file/d/1xUtsAN80H602rAsVVbkaozfS9mveHydc/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa2",
+                    mega: "https://mega.nz/folder/programa2"
+                },
+                adLink: "https://www.ejemplopromocion.com/office-oferta"
+            },
+            {
+                name: "AUTOCAD 2020",
+                links: {
+                    drive: "https://drive.google.com/file/d/19-c0KWAhZg263zDFstoo5tkVNif4QC6N/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa3",
+                    mega: "https://mega.nz/folder/programa3"
+                },
+                adLink: "https://www.ejemplopromocion.com/flstudio"
+            },
+            {
+                name: "SSPS",
+                links: {
+                    drive: "https://drive.google.com/file/d/1-9Jr0dt7by8cWjG4RpP1lSc7iy90FYeg/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa4",
+                    mega: "https://mega.nz/folder/programa4"
+                },
+                adLink: "https://www.ejemplopromocion.com/autocad"
+            },
+            {
+                name: "ARCHITEC ENDERPRISE",
+                links: {
+                    drive: "https://drive.google.com/file/d/1K713JKo0lA-nAIbqzojj_jYL-6ZbNkjE/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa5",
+                    mega: "https://mega.nz/folder/programa5"
+                },
+                adLink: "https://www.ejemplopromocion.com/vscode"
+            },
+            {
+                name: "ARGIS 3.2",
+                links: {
+                    drive: "https://drive.google.com/file/d/1KH_IBS5FSbevn7eguXlXAp5Fg_upW6Ty/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa6",
+                    mega: "https://mega.nz/folder/programa6"
+                },
+                adLink: "https://www.ejemplopromocion.com/reaper"
+            },
+            {
+                name: "CINEMA 4D 2021",
+                links: {
+                    drive: "https://drive.google.com/file/d/1KbpC2YQhjpuZC9eWWzfwjaOCfKIwdIOC/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+              {
+                name: "CINEMA 4D 2012",
+                links: {
+                    drive: "https://drive.google.com/file/d/1JB69hQ_kHuEQt2XsVW1al1r3vAkj-qV8/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+              {
+                name: "DRIVEBRO",
+                links: {
+                    drive: "https://drive.google.com/file/d/1qHxS4AQ-EnW7PP9TxOHGFEX1QBeQlrFn/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+             {
+                name: "ERWIN DATA MODEL",
+                links: {
+                    drive: "https://drive.google.com/file/d/1RC5KDjLvOkVSoi6Om4BoD1rIZa_4ywXg/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+             {
+                name: " CISCO PACK TRACER",
+                links: {
+                    drive: "https://drive.google.com/file/d/1RbX4EntyrMwIdRlSGJjxM4P6WZjr0PFl/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+             {
+                name: "FL STUDIO 21",
+                links: {
+                    drive: "https://drive.google.com/file/d/1OZyuueboCtXgLH9_62EM_yU-H8tvHbBJ/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+             {
+                name: "NITRO PDF",
+                links: {
+                    drive: "https://drive.google.com/file/d/1QO0YDMJZML3uMLLAP4GyyD1mScLlAQI_/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+             {
+                name: "PROTEUS PORTABLE",
+                links: {
+                    drive: "https://drive.google.com/file/d/1xsmwA_ldSOlzGOAWlGdP6BOg-xDL0kWe/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+             {
+                name: "SIMULADOR DE PC Y LAPTOP",
+                links: {
+                    drive: "https://drive.google.com/file/d/1XKxF2ibhlJ937Pqiow8hE4oR3gyc-F4c/view?usp=sharing",
+                    mediafire: "https://www.mediafire.com/file/programa7",
+                    mega: "https://mega.nz/folder/programa7"
+                },
+                adLink: "https://www.ejemplopromocion.com/vmware"
+            },
+        
+            
+        ];
+
+        // Renderizar programas
+        const programsContainer = document.getElementById('programsList');
+        
+        function renderPrograms() {
+            programsContainer.innerHTML = '';
+            programsData.forEach((program, idx) => {
+                const programDiv = document.createElement('div');
+                programDiv.className = 'program-item';
+                programDiv.setAttribute('data-program-idx', idx);
+                
+                const nameSpan = document.createElement('div');
+                nameSpan.className = 'program-name';
+                nameSpan.textContent = program.name;
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'download-options';
+                
+                const platforms = ['drive', 'mediafire', 'mega'];
+                const platformLabels = { drive: '📁 Drive', mediafire: '🔥 MediaFire', mega: '💾 Mega' };
+                let selectedPlatform = 'drive';
+                
+                platforms.forEach(plat => {
+                    const btn = document.createElement('button');
+                    btn.textContent = platformLabels[plat];
+                    btn.classList.add('platform-btn');
+                    if(plat === selectedPlatform) btn.classList.add('selected');
+                    btn.addEventListener('click', () => {
+                        const parent = btn.parentElement;
+                        const allBtns = parent.querySelectorAll('.platform-btn');
+                        allBtns.forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        selectedPlatform = plat;
+                        programDiv.dataset.selectedPlatform = plat;
+                    });
+                    optionsDiv.appendChild(btn);
+                });
+                programDiv.dataset.selectedPlatform = 'drive';
+                
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'action-buttons';
+                
+                const downloadBtn = document.createElement('button');
+                downloadBtn.textContent = '⬇️ Descargar';
+                downloadBtn.classList.add('download-btn');
+                downloadBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const platform = programDiv.dataset.selectedPlatform || 'drive';
+                    const link = program.links[platform];
+                    if(link && link !== "") {
+                        window.open(link, '_blank');
+                    } else {
+                        alert(`⚠️ El enlace para ${platformLabels[platform]} no está configurado aún.`);
+                    }
+                });
+                
+                const adBtn = document.createElement('button');
+                adBtn.textContent = '📢 Ver anuncio / promociones';
+                adBtn.classList.add('adlink-btn');
+                adBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if(program.adLink && program.adLink !== "") {
+                        window.open(program.adLink, '_blank');
+                    } else {
+                        alert("ℹ️ Este programa no tiene promoción especial aún.");
+                    }
+                });
+                
+                actionsDiv.appendChild(downloadBtn);
+                actionsDiv.appendChild(adBtn);
+                
+                programDiv.appendChild(nameSpan);
+                programDiv.appendChild(optionsDiv);
+                programDiv.appendChild(actionsDiv);
+                programsContainer.appendChild(programDiv);
+            });
+        }
+        
+        renderPrograms();
+        
+        // Menú horizontal táctil
+        const navWrapper = document.getElementById('navSwipeWrapper');
+        if(navWrapper) {
+            navWrapper.style.overflowX = 'auto';
+            navWrapper.style.overflowY = 'hidden';
+            navWrapper.style.webkitOverflowScrolling = 'touch';
+            navWrapper.style.scrollBehavior = 'smooth';
+            navWrapper.style.touchAction = 'pan-x';
+        }
+        
+        // Redes sociales
+        const tiktok = document.getElementById('tiktokBtn');
+        const instagram = document.getElementById('instagramBtn');
+        const facebook = document.getElementById('facebookBtn');
+        
+        if(tiktok) tiktok.addEventListener('click', (e) => { e.preventDefault();  window.location.href = 'https://www.tiktok.com/@kvers.projects?_r=1&_t=ZS-95XdLqJ1a4O'; });
+        if(instagram) instagram.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'https://www.instagram.com/kvers_projects?igsh=aG9wZmQyamUzemV5'; });
+        if(facebook) facebook.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'https://www.facebook.com/profile.php?id=61587247660638'; });
+        
+        // Navegación a otras páginas
+        const otherLinks = document.querySelectorAll('.nav-links a');
+        otherLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if(href === 'index.html' || href === 'juegos.html' || href === 'programas.html') return;
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = link.getAttribute('data-page');
+                if(page === 'celulares') window.location.href = 'celulares.html';
+                else if(page === 'isos') window.location.href = 'isos.html';
+                else alert('🔜 Página en construcción.');
+            });
+        });
+        
+        console.log('KVERS · Programas.html · Encabezado ajustado · Estado en línea en footer');
+    })();
+</script>
+</body>
+</html>

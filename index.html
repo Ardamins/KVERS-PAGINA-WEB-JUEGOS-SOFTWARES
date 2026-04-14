@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>KVERS · Landing Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #0b0d14;
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Inter', Roboto, sans-serif;
+            color: #eef2ff;
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Paleta de colores */
+        :root {
+            --verde-kvers: #43ba82;
+            --morado-kvers: #5e48b1;
+            --celeste-kvers: #64cbea;
+            --gris-card: #12151f;
+        }
+
+        /* Header fijo - ANCHO AJUSTADO AL CONTENIDO (botones) */
+        .header {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--verde-kvers);
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            max-width: 100%;
+            margin: 0 auto;
+            gap: 0.4rem;
+        }
+
+        /* Logo - centrado y pequeño */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-bottom: 0.2rem;
+        }
+        .logo-img {
+            height: 40px;
+            width: auto;
+            max-width: 130px;
+            object-fit: contain;
+        }
+        .logo-placeholder {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--verde-kvers), var(--celeste-kvers));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Menú horizontal tipo carrusel táctil - BOTONES DESLIZABLES */
+        .nav-links-wrapper {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            white-space: nowrap;
+            width: auto;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            scrollbar-color: var(--verde-kvers) #1e1f2c;
+            touch-action: pan-x;
+        }
+        .nav-links-wrapper::-webkit-scrollbar {
+            height: 3px;
+        }
+        .nav-links-wrapper::-webkit-scrollbar-track {
+            background: #1e1f2c;
+            border-radius: 10px;
+        }
+        .nav-links-wrapper::-webkit-scrollbar-thumb {
+            background: var(--verde-kvers);
+            border-radius: 10px;
+        }
+        .nav-links {
+            display: inline-flex;
+            gap: 0.5rem;
+            padding: 0.3rem 0;
+        }
+        /* BOTONES MÁS GRANDES Y VISIBLES */
+        .nav-links a {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50px;
+            font-weight: 700;
+            color: #eef2ff;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(100,203,234,0.4);
+            white-space: nowrap;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+        }
+        .nav-links a:hover, .nav-links a:active {
+            background: var(--morado-kvers);
+            color: white;
+            border-color: var(--celeste-kvers);
+            transform: scale(0.97);
+        }
+
+        /* Carrusel de anuncios principal - TOTALMENTE RESPONSIVE */
+        .carousel-section {
+            margin: 1.5rem 1rem;
+        }
+        .carousel-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.6);
+            background: #12151f;
+            touch-action: pan-y pinch-zoom;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: grab;
+            touch-action: pan-y pinch-zoom;
+        }
+        .carousel-track:active {
+            cursor: grabbing;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #12151f;
+        }
+        
+        /* CLAVE: La imagen se adapta COMPLETAMENTE al ancho del dispositivo
+           No se ve grande, se ajusta al contenedor manteniendo su proporción */
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            /* Altura máxima relativa al viewport para que no sea demasiado grande en móvil */
+            max-height: 55vh;
+            object-fit: contain;
+            display: block;
+            background: #12151f;
+            pointer-events: none;
+            margin: 0 auto;
+        }
+        
+        .slide-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(0deg, #000000cc, transparent);
+            width: 100%;
+            padding: 0.8rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-shadow: 0 1px 2px black;
+            text-align: center;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            padding: 0.2rem 0.8rem;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: 0.2s;
+            z-index: 10;
+        }
+        .carousel-btn:hover {
+            background: var(--morado-kvers);
+        }
+        .btn-left { left: 8px; }
+        .btn-right { right: 8px; }
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #5f5f7a;
+            border-radius: 10px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .dot.active {
+            background: var(--celeste-kvers);
+            width: 22px;
+        }
+
+        /* Sección de bienvenida - contiene el estado en línea */
+        .welcome-card {
+            background: linear-gradient(145deg, var(--gris-card), #0a0c14);
+            margin: 1.5rem 1rem;
+            padding: 1.8rem 1.5rem;
+            border-radius: 1.8rem;
+            border-left: 5px solid var(--verde-kvers);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+        .welcome-card h2 {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, #fff, var(--celeste-kvers));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.8rem;
+        }
+        .welcome-card p {
+            font-size: 1rem;
+            color: #cdd9ff;
+            line-height: 1.5;
+            max-width: 700px;
+            margin: 0 auto 1rem auto;
+        }
+
+        /* Estado en línea - AHORA DENTRO DE LA TARJETA DE BIENVENIDA, DEBAJO DEL TEXTO */
+        .online-status {
+            background: #0e1f1a;
+            padding: 0.4rem 1.2rem;
+            border-radius: 60px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-left: 2px solid var(--verde-kvers);
+            white-space: nowrap;
+            margin-top: 0.5rem;
+        }
+        .led {
+            width: 8px;
+            height: 8px;
+            background-color: #43ba82;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #43ba82;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.8);}
+            100% { opacity: 1; transform: scale(1.2);}
+        }
+        .ip-fake {
+            font-family: monospace;
+            background: #00000066;
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        /* Redes sociales */
+        .socials {
+            background: #0e0f17;
+            padding: 1.8rem;
+            text-align: center;
+            margin: 1.5rem 1rem;
+            border-radius: 1.8rem;
+        }
+        .socials h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--celeste-kvers);
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        .social-icon {
+            background: #1e1f2c;
+            padding: 0.5rem 1.3rem;
+            border-radius: 60px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            border: 1px solid var(--celeste-kvers);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .social-icon:hover {
+            background: var(--morado-kvers);
+            transform: scale(1.02);
+        }
+
+        /* Anuncio inferior - SE ADAPTA AL TAMAÑO DE LA IMAGEN */
+        .ad-footer {
+            background: linear-gradient(120deg, #1a1c2b, #0b0e17);
+            margin: 1rem 1rem 2rem;
+            padding: 1.2rem;
+            text-align: center;
+            border-radius: 1.8rem;
+            border: 1px dashed var(--celeste-kvers);
+        }
+        .ad-footer p {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--verde-kvers);
+            font-size: 0.9rem;
+        }
+        .ad-content {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .ad-content img {
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            border-radius: 16px;
+            object-fit: contain;
+            max-height: 120px;
+        }
+        .ad-link {
+            background: var(--morado-kvers);
+            padding: 6px 16px;
+            border-radius: 60px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .ad-link:hover {
+            background: var(--verde-kvers);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.2rem;
+            border-top: 1px solid #2a2e42;
+            font-size: 0.8rem;
+            color: #8f99b5;
+        }
+        footer strong {
+            color: var(--verde-kvers);
+        }
+
+        /* ========== RESPONSIVE: AJUSTES PARA MÓVIL ========== */
+        @media (max-width: 768px) {
+            .nav-links a {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+            .nav-links {
+                gap: 0.45rem;
+            }
+            .welcome-card h2 {
+                font-size: 1.5rem;
+            }
+            .welcome-card p {
+                font-size: 0.9rem;
+            }
+            .social-icon {
+                padding: 0.45rem 1.1rem;
+                font-size: 0.85rem;
+            }
+            .carousel-btn {
+                font-size: 1.3rem;
+                padding: 0.15rem 0.6rem;
+            }
+            .online-status {
+                font-size: 0.7rem;
+                padding: 0.35rem 1rem;
+            }
+            .ad-content {
+                flex-direction: column;
+            }
+            .ad-link {
+                white-space: normal;
+            }
+            
+            /* En móviles la imagen del carrusel es más pequeña para que no abrume */
+            .carousel-slide img {
+                max-height: 45vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links a {
+                padding: 0.45rem 0.9rem;
+                font-size: 0.8rem;
+            }
+            .nav-links {
+                gap: 0.4rem;
+            }
+            .logo-img {
+                height: 36px;
+            }
+            .logo-placeholder {
+                font-size: 1.2rem;
+            }
+            .social-icons {
+                gap: 0.8rem;
+            }
+            .social-icon {
+                padding: 0.4rem 1rem;
+                font-size: 0.8rem;
+            }
+            .welcome-card {
+                padding: 1.4rem 1rem;
+            }
+            .welcome-card h2 {
+                font-size: 1.3rem;
+            }
+            .online-status {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.9rem;
+                gap: 6px;
+            }
+            .ip-fake {
+                font-size: 0.6rem;
+            }
+            
+            /* Móviles pequeños: altura máxima aún más contenida */
+            .carousel-slide img {
+                max-height: 40vh;
+            }
+            
+            .slide-caption {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+        }
+
+        /* Para tablets en horizontal, un poco más de altura */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .carousel-slide img {
+                max-height: 50vh;
+            }
+        }
+
+        /* Ajuste global */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="nav-container">
+        <div class="logo-area">
+            <img src="LogoKvers.png" alt="KVERS" class="logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'logo-placeholder\'>KVERS</div>';">
+        </div>
+        
+        <!-- Menú horizontal tipo carrusel: DESLIZA CON LOS DEDOS HORIZONTALMENTE -->
+        <div class="nav-links-wrapper" id="navSwipeWrapper">
+            <div class="nav-links" id="navLinks">
+                <a href="#" data-page="inicio">🏠 Inicio</a>
+                <a href="#" data-page="juegos">🎮 Juegos</a>
+                <a href="#" data-page="programas">💻 Programas</a>
+                <a href="#" data-page="celulares">📱 Celulares</a>
+                <a href="#" data-page="isos">💿 ISOs</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- CARRUSEL DE ANUNCIOS - TOTALMENTE RESPONSIVE
+         LAS IMÁGENES SE ADAPTAN AL TAMAÑO DEL DISPOSITIVO SIN ERRORES -->
+    <div class="carousel-section">
+        <div class="carousel-container">
+            <button class="carousel-btn btn-left" id="prevSlide">‹</button>
+            <div class="carousel-track" id="carouselTrack">
+                <div class="carousel-slide">
+                    <img src="anuncioKvers(1).png" alt="Anuncio 1" 
+                         onerror="this.src='https://placehold.co/800x400/1f2a3e/64cbea?text=KVERS+-+Bienvenido'">
+                    <div class="slide-caption"> BIENVENIDO A KVERS</div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="anuncioJuegos.png" 
+                         alt="Anuncio Cuadrado"
+                         style="object-fit: contain;">
+                    <div class="slide-caption"> JUEGOS</div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="comunidadAnuncio.png" 
+                         alt="Anuncio Panorámico">
+                    <div class="slide-caption">🎮 Comunidad KVERS · Únete</div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="anuncioMovil.png" 
+                         alt="Anuncio Vertical">
+                    <div class="slide-caption"> Contenido para todos los dispositivos</div>
+                </div>
+            </div>
+            <button class="carousel-btn btn-right" id="nextSlide">›</button>
+        </div>
+        <div class="dots" id="dotsContainer"></div>
+    </div>
+
+    <!-- BIENVENIDA con estado en línea incluido debajo del texto -->
+    <div class="welcome-card" id="inicio">
+        <h2>✨ Bienvenido a KVERS ✨</h2>
+        <p>Tu portal de confianza. Próximamente encontrarás las mejores descargas de juegos, programas, recursos para celulares e ISOs. <br> ¡Mantente al día con nuestros anuncios y redes sociales!</p>
+        <!-- Estado en línea DENTRO de la tarjeta de bienvenida, debajo del texto -->
+        <div class="online-status">
+            <div class="led"></div>
+            <span>En línea</span>
+            <div class="ip-fake">192.168.1.105</div>
+        </div>
+    </div>
+
+    <!-- REDES SOCIALES -->
+    <div class="socials">
+        <h3>🌐 Síguenos en Redes</h3>
+        <div class="social-icons">
+            <a href="https://www.tiktok.com/@kvers.projects?_r=1&_t=ZS-95XdLqJ1a4O" class="social-icon" id="tiktokBtn">🎵 TikTok</a>
+            <a href="https://www.instagram.com/kvers_proyects/?utm_source=qr&r=nametag" class="social-icon" id="instagramBtn">📸 Instagram</a>
+            <a href="https://www.facebook.com/profile.php?id=61587247660638" class="social-icon" id="facebookBtn">📘 Facebook</a>
+            <a href="https://github.com/Ardamins" class="social-icon" id="facebookBtn">GITHUB</a>
+        </div>
+        <p style="margin-top: 8px; font-size: 0.85rem;">keanovpaginawebyproyectos@gmail.com· Novedades y más</p>
+    </div>
+
+    <!-- ANUNCIO INFERIOR - SE ADAPTA AL TAMAÑO DE LA IMAGEN -->
+    <div class="ad-footer">
+        <p>📢 ESPACIO PUBLICITARIO</p>
+        <div class="ad-content">
+            <img src="bannerOpti.png" alt="Banner publicitario">
+            <a href="#" class="ad-link" id="adLink">Contactar →</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 KVERS · Todos los derechos reservados · Autor: <strong>KVERS</strong></p>
+    <p>🌐 IP simulada: 192.168.1.1 · Servidor activo</p>
+</footer>
+
+<script>
+    (function() {
+        // --------------------- CARRUSEL DE ANUNCIOS (TÁCTIL + BOTONES) ---------------------
+        const track = document.getElementById('carouselTrack');
+        const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+        const prevBtn = document.getElementById('prevSlide');
+        const nextBtn = document.getElementById('nextSlide');
+        const dotsContainer = document.getElementById('dotsContainer');
+        let currentIndex = 0;
+        let totalSlides = slides.length;
+        let startX = 0, isDragging = false, diffX = 0;
+
+        function updateCarousel() {
+            if (!track) return;
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            updateDots();
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                if(idx === currentIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        function createDots() {
+            if(!dotsContainer) return;
+            dotsContainer.innerHTML = '';
+            slides.forEach((_, idx) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if(idx === currentIndex) dot.classList.add('active');
+                dot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    currentIndex = idx;
+                    updateCarousel();
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function nextSlide() { 
+            currentIndex = (currentIndex + 1) % totalSlides; 
+            updateCarousel(); 
+        }
+        
+        function prevSlide() { 
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides; 
+            updateCarousel(); 
+        }
+
+        if(prevBtn) prevBtn.addEventListener('click', prevSlide);
+        if(nextBtn) nextBtn.addEventListener('click', nextSlide);
+
+        // Swipe táctil para el carrusel de anuncios
+        if(track) {
+            track.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                track.style.transition = 'none';
+                diffX = 0;
+            }, { passive: false });
+            
+            track.addEventListener('touchmove', (e) => {
+                if(!isDragging) return;
+                const moveX = e.touches[0].clientX;
+                const delta = moveX - startX;
+                const containerWidth = track.parentElement.clientWidth;
+                const percentMove = (delta / containerWidth) * 100;
+                let newPercent = - (currentIndex * 100) + percentMove;
+                track.style.transform = `translateX(${newPercent}%)`;
+                diffX = delta;
+                e.preventDefault();
+            }, { passive: false });
+            
+            track.addEventListener('touchend', () => {
+                if(!isDragging) return;
+                track.style.transition = 'transform 0.3s ease';
+                if(Math.abs(diffX) > 40) {
+                    if(diffX > 0) prevSlide();
+                    else nextSlide();
+                } else {
+                    updateCarousel();
+                }
+                isDragging = false;
+                diffX = 0;
+            });
+
+            // Soporte mouse para escritorio
+            let mouseDown = false, mouseStartX = 0, mouseDelta = 0;
+            track.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                mouseDown = true;
+                mouseStartX = e.clientX;
+                track.style.transition = 'none';
+            });
+            window.addEventListener('mousemove', (e) => {
+                if(!mouseDown) return;
+                const deltaMove = e.clientX - mouseStartX;
+                const containerW = track.parentElement.clientWidth;
+                const movePercent = (deltaMove / containerW) * 100;
+                track.style.transform = `translateX(calc(-${currentIndex * 100}% + ${movePercent}%))`;
+                mouseDelta = deltaMove;
+            });
+            window.addEventListener('mouseup', (e) => {
+                if(!mouseDown) return;
+                track.style.transition = 'transform 0.3s ease';
+                if(Math.abs(mouseDelta) > 50) {
+                    if(mouseDelta > 0) prevSlide();
+                    else nextSlide();
+                } else {
+                    updateCarousel();
+                }
+                mouseDown = false;
+                mouseDelta = 0;
+            });
+        }
+
+        createDots();
+        updateCarousel();
+        
+        // Actualizar carrusel al redimensionar para mantener proporciones correctas
+        window.addEventListener('resize', () => {
+            updateCarousel();
+        });
+
+        // --------------------- MENÚ HORIZONTAL (CARRUSEL TÁCTIL PARA LOS BOTONES) ---------------------
+        const navWrapper = document.getElementById('navSwipeWrapper');
+        if(navWrapper) {
+            navWrapper.style.overflowX = 'auto';
+            navWrapper.style.overflowY = 'hidden';
+            navWrapper.style.webkitOverflowScrolling = 'touch';
+            navWrapper.style.scrollBehavior = 'smooth';
+            navWrapper.style.touchAction = 'pan-x';
+        }
+
+        // Acciones de los botones del menú
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = link.getAttribute('data-page');
+                if(page === 'inicio') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } 
+                else if(page === 'juegos') {
+                    window.location.href = 'juegos.html';
+                }
+                else if(page === 'programas') {
+                    window.location.href = 'programas.html';
+                }
+                else if(page === 'celulares') {
+                    window.location.href = 'celulares.html';
+                }
+                else if(page === 'isos') {
+                    window.location.href = 'isos.html';
+                }
+                else {
+                    alert('🔜 Página en construcción.');
+                }
+            });
+        });
+
+        // --------------------- REDES SOCIALES Y ANUNCIOS ---------------------
+        const tiktok = document.getElementById('tiktokBtn');
+        const instagram = document.getElementById('instagramBtn');
+        const facebook = document.getElementById('facebookBtn');
+        const adLink = document.getElementById('adLink');
+
+        if(tiktok) tiktok.addEventListener('click', (e) => { 
+    window.location.href = 'https://www.tiktok.com/@kvers.projects?_r=1&_t=ZS-95XdLqJ1a4O'; 
+});
+if(instagram) instagram.addEventListener('click', (e) => { 
+    window.location.href = 'https://www.instagram.com/kvers_projects?igsh=aG9wZmQyamUzemV5'; 
+});
+if(facebook) facebook.addEventListener('click', (e) => { 
+    window.location.href = 'https://www.facebook.com/profile.php?id=61587247660638'; 
+});
+if(adLink) adLink.addEventListener('click', (e) => { 
+    window.location.href = 'https://github.com/Ardamins'; // o el enlace que quieras para contacto
+});
+        // Asegurar que la página nunca se desplace lateralmente
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowX = 'hidden';
+        
+        console.log('KVERS · Carrusel responsive: las imágenes se adaptan perfectamente al tamaño del dispositivo sin verse demasiado grandes');
+    })();
+</script>
+</body>
+</html>
